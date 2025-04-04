@@ -40,32 +40,34 @@ const features = [
 ]
 const Features = () => {
   return (
-    <div className="bg-white-500">
-      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 py-12">
-        <h3 className="text-2xl font-bold">
+    <div className="bg-gradient-to-br from-blue-50 to-blue-100 min-h-[calc(100vh-4rem-3.5rem)] flex items-center">
+      <div className="mx-auto max-w-7xl px-4 sm:px-8 lg:px-12 w-full">
+        <h3 className="text-3xl font-extrabold text-center text-black mb-10 tracking-tight">
           Incentives
         </h3>
-        <div className="mt-6 gap-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {
-            features.map((feature, index) => (
-              <div className="py-4" key={index} >
-                
-                <div>
-                  <img className="h-20 w-20" src={feature.image}/>
-                </div>
-                <div className="mt-4 font-medium text-base">
-                  {feature.title}
-                </div>
-                <div className="mt-2 text-sm text-gray-600">
-                  {feature.description}
-                </div>
+        <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          {features.map((feature, index) => (
+            <div
+              className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 p-8 flex flex-col items-center text-center"
+              key={index}
+            >
+              <img
+                className="h-20 w-20 mb-4"
+                src={feature.image}
+                alt={feature.title + ' icon'}
+              />
+              <div className="font-semibold text-lg text-gray-800 mb-2">
+                {feature.title}
               </div>
-            ))
-          }
+              <div className="text-sm text-gray-600">
+                {feature.description}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default Features;
