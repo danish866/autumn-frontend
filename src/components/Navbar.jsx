@@ -1,39 +1,53 @@
 import { useCookies } from "react-cookie";
 import { logoutApi } from "../apis/authentication";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  const [cookies, removeCookie] = useCookies(['jwt']);
+  const [cookies, , removeCookie] = useCookies(['jwt']);
+  const navigate = useNavigate();
+
   const handleLogout = async (e) => {
+    e.preventDefault();
     const [result, error] = await logoutApi(cookies.jwt);
-    handleResponse([result, error]);   
-  }
+    handleResponse([result, error]);
+  };
 
   const handleResponse = async ([result, error]) => {
-    if (error) {
-      removeCookie('jwt');
-    } else {
-      removeCookie('jwt');
-    }
-  }
-  
+    removeCookie('jwt');
+    navigate('/login');
+  };
+
   return (
-    <div className="bg-white-500 shadow">
-      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center">
-          <p className="text-3xl font-bold">
-            Autumn
-          </p>
+    <nav className="sticky top-0 z-50 bg-white shadow-md">
+      <div className="mx-auto max-w-7xl px-4 sm:px-8 lg:px-12">
+        <div className="flex justify-between items-center h-16">
+          <Link to="/" className="flex items-center gap-2">
+            {/* Replace with logo image if available */}
+            <span className="text-2xl font-extrabold text-black tracking-tight">Autumn</span>
+          </Link>
           <div>
-            {(cookies.jwt) ?
-              (<button onClick={handleLogout} className="bg-blue-500 text-white rounded px-3 py-1.5 my-4">Logout</button>) :
-              (<Link to="/login" className="bg-blue-500 text-white rounded px-3 py-1.5 my-4 inline-block">Login</Link>)
-            }
-            </div>
+            {cookies.jwt ? (
+              <button
+                onClick={handleLogout}
+                className="bg-blue-600 text-white rounded-lg px-5 py-2 font-semibold shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                aria-label="Logout"
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                className="bg-blue-600 text-white rounded-lg px-5 py-2 font-semibold shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                aria-label="Login"
+              >
+                Login
+              </Link>
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  )
-}
+    </nav>
+  );
+};
 
-export default Navbar
+export default Navbar;
