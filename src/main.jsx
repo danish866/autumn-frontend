@@ -23,6 +23,7 @@ const router = createBrowserRouter([
     element: <Authentication pageType={PageType.Register} />,
   }
 ]);
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <RouterProvider router={router} />
