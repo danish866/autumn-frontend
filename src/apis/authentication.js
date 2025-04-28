@@ -17,11 +17,13 @@ export const registerApi  = async (bodyObject) => {
       },
       body: JSON.stringify(bodyObject),
     });
+    const result = await response.json();
     if (response.ok) {
-      const result = await response.json();
-      return [result, ''];      
+      return [response, ''];      
+    } else{
+      return ['', result.status?.message || 'Unknown server error'];
     }
-    return ['', 'Server side Error']
+    
   } catch (error) {
     return ['', `Server Down: ${error}`];
   }
@@ -44,11 +46,13 @@ export const loginApi  = async (bodyObject) => {
       },
       body: JSON.stringify(bodyObject),
     });
+    const result = await response.json();
     if (response.ok) {
-      const result = await response.json();
-      return [result, ''];      
+      return [response, ''];      
     }
-    return ['', `${response.status} ${response.statusText}`]
+    else{
+      return ['', result.status?.message || 'Unknown server error'];
+    }
   } catch (error) {
     return ['', `Server Down: ${error}`];
   }

@@ -75,6 +75,7 @@ const Authentication = ({pageType}) => {
     if (error) {
       toast.error(error);
     } else {
+      console.log("token", result.headers.get('Authorization')); 
       toast.success('Login successful');
       navigate('/');
     }
