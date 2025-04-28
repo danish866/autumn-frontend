@@ -6,17 +6,32 @@ import { registerApi } from '../apis/authentication';
 import { loginApi } from '../apis/authentication';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useCookies } from 'react-cookie';
+import { useEffect } from 'react';
+import autumnLogo from '../assets/autumn_logo.svg';
 
 const intitialErrorState = {
   email: '',
   password: ''
 }
 const Authentication = ({pageType}) => {
+  const [cookies, setCookie] = useCookies(['jwt']);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState(intitialErrorState);
   const navigate = useNavigate();
+  const [hasCheckedLogin, setHasCheckedLogin] = useState(false)
   let isValid = true;
+
+  useEffect(() => {
+    if (!hasCheckedLogin) {
+      if (cookies.jwt && cookies.jwt !== 'undefined') {
+        toast.success('You are already logged in');
+        navigate('/');
+      }
+      setHasCheckedLogin(true);
+    }
+  }, [cookies.jwt, navigate, hasCheckedLogin]);
   
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -75,56 +90,58 @@ const Authentication = ({pageType}) => {
     if (error) {
       toast.error(error);
     } else {
-      console.log("token", result.headers.get('Authorization')); 
+      const jwt = result.headers.get('Authorization');
+      
+      setCookie('jwt', jwt);
+      
       toast.success('Login successful');
       navigate('/');
     }
   }
 	return (
-    <div className="bg-white">
-      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 py-12">
-        <h3 className="text-2xl font-bold">
-          {(pageType === PageType.Login) ? 'Login' : 'Register'}
-        </h3>
-
+    <div className="bg-white min-h-screen flex items-center justify-center">
+      <div className="bg-white mx-auto max-w-2xl px-6 sm:px-8 lg:px-10 py-20">
+        <img src={autumnLogo} alt="Logo" className="w-48 h-48 mx-auto mb-10" />
+        
         {(pageType === PageType.Login) ? 
-          <p className="mt-4"> Not a member? 
+          <p className="mt-6 text-center"> Not a member? 
             <span className="text-blue-500 ms-1 cursor-pointer">
               <Link to="/register">Register</Link>         
             </span>  
           </p>
           :
-          <p className="mt-4"> Already a member? 
+          <p className="mt-6 text-center"> Already a member? 
             <span className="ms-1 text-blue-500 cursor-pointer">
               <Link to="/login">Login</Link>
             </span>  
           </p>
         }
-        <form onSubmit={handleSubmit} className="mt-10 max-w-96 flex flex-col gap-4">
-        
+  
+        <form onSubmit={handleSubmit} className="mt-8 max-w-xl flex flex-col gap-4 mx-auto">
           <div>
             <input
               name="email"
               type="email"
-              className="py-2 w-full border border-gray-600 rounded-md px-4"
+              className="py-2 w-full border border-gray-600 rounded-md px-6"
               placeholder="Enter Email"
               onChange={handleEmailChange}
               value={email}
             />
-            {errors.email && <p className="text-sm text-medium text-red-500 mt-1">{errors.email}</p>}
+            {errors.email && <p className="text-sm text-medium text-red-500 mt-2">{errors.email}</p>}
           </div>
+          
           <div>
             <input
               name="password"
               type="password"
-              className="py-2 w-full border border-gray-600 rounded-md px-4"
+              className="py-2 w-full border border-gray-600 rounded-md px-6"
               placeholder="Enter Password"
               onChange={handlePasswordChange}
               value={password}
             />
-            {errors.password && <p className="text-sm text-medium text-red-500 mt-1">{errors.password}</p>}
+            {errors.password && <p className="text-sm text-medium text-red-500 mt-2">{errors.password}</p>}
           </div>
-
+  
           <button
             type="submit"
             className="bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200"
@@ -132,10 +149,12 @@ const Authentication = ({pageType}) => {
             {(pageType === PageType.Login) ? 'Login' : 'Register'}
           </button>
         </form>
-            
       </div>
     </div>
-	)
+  )
+  
+  
+  
 }
 
 const PageType = Object.freeze({

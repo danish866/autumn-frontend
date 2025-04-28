@@ -10,16 +10,10 @@ export const registerApi  = async (bodyObject) => {
   };
   
   try {
-    const response = await fetch(`${DOMAIN}/users`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(bodyObject),
-    });
+    const response = await fetch(`${DOMAIN}/users`, requestOptions);
     const result = await response.json();
     if (response.ok) {
-      return [response, ''];      
+      return [result, ''];      
     } else{
       return ['', result.status?.message || 'Unknown server error'];
     }
@@ -39,13 +33,31 @@ export const loginApi  = async (bodyObject) => {
   };
   
   try {
-    const response = await fetch(`${DOMAIN}/users/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(bodyObject),
-    });
+    const response = await fetch(`${DOMAIN}/users/login`, requestOptions)
+    const result = await response.json();
+    if (response.ok) {
+      return [response, ''];      
+    }
+    else{
+      return ['', result.status?.message || 'Unknown server error'];
+    }
+  } catch (error) {
+    return ['', `Server Down: ${error}`];
+  }
+};
+
+
+export const logoutApi  = async (jwtToken) => {
+  const requestOptions = {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": jwtToken
+    }
+  };
+  
+  try {
+    const response = await fetch(`${DOMAIN}/users/logout`, requestOptions)
     const result = await response.json();
     if (response.ok) {
       return [response, ''];      

@@ -5,6 +5,7 @@ import App from './App.jsx'
 import { Authentication, PageType } from './pages/Authentication.jsx'
 import {ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { CookiesProvider } from 'react-cookie';
 
 import {
   createBrowserRouter,
@@ -28,7 +29,9 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
-    <ToastContainer />
+    <CookiesProvider defaultSetOptions={{ path: '/' }}>
+      <RouterProvider router={router} />
+      <ToastContainer />
+    </CookiesProvider>
   </StrictMode>
 )
