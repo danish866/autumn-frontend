@@ -26,3 +26,30 @@ export const registerApi  = async (bodyObject) => {
     return ['', `Server Down: ${error}`];
   }
 };
+
+export const loginApi  = async (bodyObject) => {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(bodyObject),
+  };
+  
+  try {
+    const response = await fetch(`${DOMAIN}/users/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(bodyObject),
+    });
+    if (response.ok) {
+      const result = await response.json();
+      return [result, ''];      
+    }
+    return ['', `${response.status} ${response.statusText}`]
+  } catch (error) {
+    return ['', `Server Down: ${error}`];
+  }
+};

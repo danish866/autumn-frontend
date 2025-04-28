@@ -41,7 +41,7 @@ const features = [
 const Features = () => {
   return (
     <div className="bg-white-500">
-      <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 py-12">
+      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 py-12">
         <h3 className="text-2xl font-bold">
           Incentives
         </h3>

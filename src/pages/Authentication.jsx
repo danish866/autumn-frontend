@@ -3,16 +3,20 @@ import {useState} from 'react';
 import { Link } from 'react-router-dom';
 import { validateEmail,validatePassword } from '../utilities/validations';
 import { registerApi } from '../apis/authentication';
+import { loginApi } from '../apis/authentication';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const intitialErrorState = {
   email: '',
-  password: '',
-  general: ''
+  password: ''
 }
 const Authentication = ({pageType}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState(intitialErrorState);
+  const navigate = useNavigate();
+  let isValid = true;
   
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -26,6 +30,7 @@ const Authentication = ({pageType}) => {
     e.preventDefault();
     let newErrors = {}
     if (!validateEmail(email)) {
+      isValid = false;
       newErrors = {
         ...newErrors,
         email: 'Please enter a valid email address'
@@ -33,6 +38,7 @@ const Authentication = ({pageType}) => {
     }
 
     if (!validatePassword(password)) {
+      isValid = false;
       newErrors = {
         ...newErrors,
         password: 'Password must be at least 6 characters long'
@@ -40,22 +46,37 @@ const Authentication = ({pageType}) => {
     }
 
     setErrors(newErrors);
-    console.log("I am here");
 
-    if(pageType === PageType.Register) {
-      const [result, error] = await registerApi({
-        user: {
-          email: email,
-          password: password
-        }
-      })
-      
-      if (error) {
-        setErrors({
-          ...errors,
-          api: error
+    if (!isValid) { 
+      return;
+    }else {
+      if(pageType === PageType.Register) {
+        const [result, error] = await registerApi({
+          user: {
+            email: email,
+            password: password
+          }
         })
+        handleResponse([result, error]);
+
+      }else if(pageType === PageType.Login) {
+        const [result, error] = await loginApi({
+          user: {
+            email: email,
+            password: password
+          }
+        })
+        handleResponse([result, error]);
       }
+    }
+  }
+
+  const handleResponse = ([result, error]) => {
+    if (error) {
+      toast.error(error);
+    } else {
+      toast.success('Login successful');
+      navigate('/');
     }
   }
 	return (
@@ -109,7 +130,6 @@ const Authentication = ({pageType}) => {
           >
             {(pageType === PageType.Login) ? 'Login' : 'Register'}
           </button>
-          {errors.api && <p className="text-sm text-medium text-red-500 mt-1">{errors.api}</p>}
         </form>
             
       </div>
