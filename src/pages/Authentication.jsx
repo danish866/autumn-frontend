@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import {useState} from 'react';
 import { Link } from 'react-router-dom';
 import { validateEmail,validatePassword } from '../utilities/validations';
+import { registerApi } from '../apis/authentication';
 
 const intitialErrorState = {
   email: '',
@@ -21,7 +22,7 @@ const Authentication = ({pageType}) => {
     setPassword(e.target.value);
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let newErrors = {}
     if (!validateEmail(email)) {
@@ -39,6 +40,23 @@ const Authentication = ({pageType}) => {
     }
 
     setErrors(newErrors);
+    console.log("I am here");
+
+    if(pageType === PageType.Register) {
+      const [result, error] = await registerApi({
+        user: {
+          email: email,
+          password: password
+        }
+      })
+      
+      if (error) {
+        setErrors({
+          ...errors,
+          api: error
+        })
+      }
+    }
   }
 	return (
     <div className="bg-white">
@@ -91,6 +109,7 @@ const Authentication = ({pageType}) => {
           >
             {(pageType === PageType.Login) ? 'Login' : 'Register'}
           </button>
+          {errors.api && <p className="text-sm text-medium text-red-500 mt-1">{errors.api}</p>}
         </form>
             
       </div>
