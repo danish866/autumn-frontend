@@ -11,7 +11,7 @@ const intitialErrorState = {
 const Authentication = ({pageType}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errors, setError] = useState(intitialErrorState);
+  const [errors, setErrors] = useState(intitialErrorState);
   
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -22,21 +22,23 @@ const Authentication = ({pageType}) => {
   }
 
   const handleSubmit = (e) => {
+    e.preventDefault();
+    let newErrors = {}
     if (!validateEmail(email)) {
-      setError(prev => ({
-        ...prev,
+      newErrors = {
+        ...newErrors,
         email: 'Please enter a valid email address'
-      }));
+      }
     }
 
     if (!validatePassword(password)) {
-      setError({
-        ...prev,
+      newErrors = {
+        ...newErrors,
         password: 'Password must be at least 6 characters long'
-      });
+      }
     }
 
-    e.preventDefault();
+    setErrors(newErrors);
   }
 	return (
     <div className="bg-white">
