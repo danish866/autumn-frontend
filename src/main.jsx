@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
+import Features from './components/Features';
 import { Authentication, PageType } from './pages/Authentication.jsx'
 import ActiveChallenges from './pages/ActiveChallenges.jsx';
 import {ToastContainer} from 'react-toastify'
@@ -16,7 +17,17 @@ import {
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <App />, // App is now the layout
+    children: [
+      {
+        index: true,
+        element: <Features />,
+      },
+      {
+        path: "active-challenges",
+        element: <ActiveChallenges />,
+      },
+    ],
   },
   {
     path: "/login",
@@ -25,10 +36,6 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <Authentication pageType={PageType.Register} />,
-  },
-  {
-    path: "/active-challenges",
-    element: <ActiveChallenges />,
   }
 ]);
 
