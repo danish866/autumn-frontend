@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import { Authentication, PageType } from './pages/Authentication.jsx'
+import ActiveChallenges from './pages/ActiveChallenges.jsx';
 import {ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { CookiesProvider } from 'react-cookie';
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <Authentication pageType={PageType.Register} />,
+  },
+  {
+    path: "/active-challenges",
+    element: <ActiveChallenges />,
   }
 ]);
 
