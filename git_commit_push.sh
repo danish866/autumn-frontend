@@ -9,7 +9,7 @@ fi
 modified_files=$(git diff --name-only --cached )
 
 
-commit_date="2025-04-30 11:14:50" #year-month-day
+commit_date="2025-05-5 11:14:50" #year-month-day
 
 for file in $modified_files; do
     git commit --date="$commit_date" -m "changes" $file
