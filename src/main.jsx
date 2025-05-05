@@ -5,6 +5,7 @@ import App from './App.jsx'
 import Features from './components/Features';
 import { Authentication, PageType } from './pages/Authentication.jsx'
 import ActiveChallenges from './pages/ActiveChallenges.jsx';
+import AddChallenge from './pages/AddChallenge.jsx';
 import {ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { CookiesProvider } from 'react-cookie';
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
       {
         path: "active-challenges",
         element: <ActiveChallenges />,
+      },
+      {
+        path: "add-challenge",
+        element: <AddChallenge />,
       },
     ],
   },
