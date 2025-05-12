@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { addChallengeApi } from '../apis/challenge';
+import { useNavigate } from 'react-router-dom';
 
 const AddChallenge = () => {
   const [form, setForm] = useState({
@@ -9,6 +11,13 @@ const AddChallenge = () => {
     startDate: '',
     endDate: ''
   });
+  const navigate = useNavigate();
+  // Get JWT from cookie (simple implementation, you may want to use a library for production)
+  const getJwtFromCookie = () => {
+    debugger
+    const match = document.cookie.match(/(?:^|; )jwt=([^;]*)/);
+    return match ? decodeURIComponent(match[1]) : '';
+  };
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -60,11 +69,23 @@ const AddChallenge = () => {
     'list', 'bullet', 'link', 'image'
   ];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: handle form submission (API call)
-    setForm({ name: '', description: '', startDate: '', endDate: '' });
-    // Optionally redirect or show a success message
+    // Prepare data for API
+    const challengeData = {
+      title: form.name,
+      description: form.description,
+      start_date: form.startDate,
+      end_date: form.endDate
+    };
+    const jwt = getJwtFromCookie();
+    const [result, error] = await addChallengeApi(challengeData, jwt);
+    if (error) {
+      alert(error);
+    } else {
+      setForm({ name: '', description: '', startDate: '', endDate: '' });
+      navigate('/'); // Redirect to home or ActiveChallenges
+    }
   };
 
   return (
