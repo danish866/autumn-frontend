@@ -5,12 +5,12 @@ import { addChallengeApi } from '../apis/challenge';
 import { useNavigate } from 'react-router-dom';
 
 const AddChallenge = () => {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState(() => ({
     name: '',
     description: '',
     startDate: '',
     endDate: ''
-  });
+  }));
   const navigate = useNavigate();
   // Get JWT from cookie (simple implementation, you may want to use a library for production)
   const getJwtFromCookie = () => {
@@ -20,7 +20,7 @@ const AddChallenge = () => {
   };
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const quillRef = useRef(null);
@@ -30,24 +30,24 @@ const AddChallenge = () => {
   };
 
   // Optional: image upload handler for ReactQuill
-  const imageHandler = () => {
-    const input = document.createElement('input');
-    input.setAttribute('type', 'file');
-    input.setAttribute('accept', 'image/*');
-    input.click();
-    input.onchange = async () => {
-      const file = input.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const quill = quillRef.current.getEditor();
-          const range = quill.getSelection();
-          quill.insertEmbed(range ? range.index : 0, 'image', reader.result);
-        };
-        reader.readAsDataURL(file);
-      }
-    };
-  };
+//   const imageHandler = () => {
+//     const input = document.createElement('input');
+//     input.setAttribute('type', 'file');
+//     input.setAttribute('accept', 'image/*');
+//     input.click();
+//     input.onchange = async () => {
+//       const file = input.files[0];
+//       if (file) {
+//         const reader = new FileReader();
+//         reader.onload = () => {
+//           const quill = quillRef.current.getEditor();
+//           const range = quill.getSelection();
+//           quill.insertEmbed(range ? range.index : 0, 'image', reader.result);
+//         };
+//         reader.readAsDataURL(file);
+//       }
+//     };
+//   };
 
   const modules = {
     toolbar: {
@@ -57,10 +57,7 @@ const AddChallenge = () => {
         [{ list: 'ordered' }, { list: 'bullet' }],
         ['link', 'image'],
         ['clean']
-      ],
-      handlers: {
-        image: imageHandler
-      }
+      ]
     }
   };
 
@@ -106,18 +103,20 @@ const AddChallenge = () => {
           </div>
           <div>
             <label className="block font-medium mb-1">Description</label>
-            <div className="w-full border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-400 pb-2">
-              <ReactQuill
+            <div className="w-full mb-6">
+              
+              <ReactQuill 
                 ref={quillRef}
-                value={form.description}
+                theme="snow" 
+                value={form.description ?? ''} 
                 onChange={handleQuillChange}
                 modules={modules}
                 formats={formats}
-                style={{ minHeight: 200, height: 200, marginBottom: 34 }}
-                className=""
+                style={{ minHeight: 120, height: 120, marginBottom: '3rem' }}
                 placeholder="Enter challenge description. You can upload images using the toolbar."
-                required
-              />
+                
+                
+                />
             </div>
           </div>
           <div className="flex flex-col sm:flex-row gap-4">
