@@ -24,6 +24,7 @@ export const registerApi  = async (bodyObject) => {
 };
 
 export const loginApi  = async (bodyObject) => {
+  console.log(bodyObject);
   const requestOptions = {
     method: "POST",
     headers: {
