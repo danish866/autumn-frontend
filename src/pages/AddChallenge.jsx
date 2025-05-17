@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const AddChallenge = () => {
   const [form, setForm] = useState({
@@ -11,6 +13,52 @@ const AddChallenge = () => {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+
+  const quillRef = useRef(null);
+
+  const handleQuillChange = (value) => {
+    setForm((prev) => ({ ...prev, description: value }));
+  };
+
+  // Optional: image upload handler for ReactQuill
+  const imageHandler = () => {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+    input.onchange = async () => {
+      const file = input.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const quill = quillRef.current.getEditor();
+          const range = quill.getSelection();
+          quill.insertEmbed(range ? range.index : 0, 'image', reader.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+  };
+
+  const modules = {
+    toolbar: {
+      container: [
+        [{ header: [1, 2, 3, false] }],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['link', 'image'],
+        ['clean']
+      ],
+      handlers: {
+        image: imageHandler
+      }
+    }
+  };
+
+  const formats = [
+    'header', 'bold', 'italic', 'underline', 'strike', 'blockquote',
+    'list', 'bullet', 'link', 'image'
+  ];
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -37,14 +85,19 @@ const AddChallenge = () => {
           </div>
           <div>
             <label className="block font-medium mb-1">Description</label>
-            <textarea
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md px-4 py-2 min-h-[120px] focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
-            />
-            {/* Replace textarea with a rich text editor if needed */}
+            <div className="w-full border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-400 pb-2">
+              <ReactQuill
+                ref={quillRef}
+                value={form.description}
+                onChange={handleQuillChange}
+                modules={modules}
+                formats={formats}
+                style={{ minHeight: 200, height: 200, marginBottom: 34 }}
+                className=""
+                placeholder="Enter challenge description. You can upload images using the toolbar."
+                required
+              />
+            </div>
           </div>
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
