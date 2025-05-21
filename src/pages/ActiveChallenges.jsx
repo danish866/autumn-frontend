@@ -58,15 +58,12 @@ const ActiveChallenges = () => {
                   key={challenge.id || idx}
                   className="bg-white rounded-3xl shadow-xl flex flex-col items-center p-10 hover:shadow-2xl transition-shadow duration-300"
                 >
-                  <img
-                    src={fallbackIcons[idx % fallbackIcons.length]}
-                    alt={challenge.title + ' icon'}
-                    className="h-40 w-40 object-contain mb-6"
-                  />
-                  <div className="font-bold text-2xl text-gray-800 text-center">
+                  
+                 
+                  <div className="text-gray-600 text-center mt-2 text-base line-clamp-3" dangerouslySetInnerHTML={{ __html: challenge.description }} />
+                   <div className="font-bold text-2xl text-gray-800 text-center">
                     {challenge.title}
                   </div>
-                  <div className="text-gray-600 text-center mt-2 text-base line-clamp-3" dangerouslySetInnerHTML={{ __html: challenge.description }} />
                   <div className="mt-4 text-sm text-gray-500">
                     {challenge.start_date} - {challenge.end_date}
                   </div>
