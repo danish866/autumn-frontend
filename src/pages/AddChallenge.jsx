@@ -68,7 +68,6 @@ const AddChallenge = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Prepare data for API
     const challengeData = {
       title: form.name,
       description: form.description,
@@ -81,7 +80,7 @@ const AddChallenge = () => {
       alert(error);
     } else {
       setForm({ name: '', description: '', startDate: '', endDate: '' });
-      navigate('/'); // Redirect to home or ActiveChallenges
+      navigate('/active-challenges');
     }
   };
 
@@ -114,8 +113,6 @@ const AddChallenge = () => {
                 formats={formats}
                 style={{ minHeight: 120, height: 120, marginBottom: '3rem' }}
                 placeholder="Enter challenge description. You can upload images using the toolbar."
-                
-                
                 />
             </div>
           </div>
